@@ -1,0 +1,40 @@
+<h2 class="text-center mb-4">Sign Up</h2>
+
+<% if @user.errors.any? %>
+  <div class="alert alert-danger">
+    <h4 class="text-danger">Please fix the following errors:</h4>
+    <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @user, local: true, class: "w-50 mx-auto p-4 border rounded shadow-sm bg-light" do |f| %>
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label fw-bold" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Enter your name" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email, class: "form-label fw-bold" %>
+    <%= f.email_field :email, class: "form-control", placeholder: "Enter your email" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password, class: "form-label fw-bold" %>
+    <%= f.password_field :password, class: "form-control", placeholder: "Enter a password" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password_confirmation, class: "form-label fw-bold" %>
+    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm your password" %>
+  </div>
+
+  <div class="text-center">
+    <%= f.submit "Sign Up", class: "btn btn-primary w-100" %>
+  </div>
+<% end %>
+
+<p class="text-center mt-3">Already have an account? <%= link_to "Login", login_path, class: "text-primary fw-bold" %></p>

@@ -1,0 +1,93 @@
+<div class="container">
+  <h1 class="text-center my-4">All Blog Posts</h1>
+
+  <% if logged_in? %>
+  <div class="text-center mb-3">
+    <%= link_to "Create New Post", new_post_path, class: "btn btn-primary" %>
+  </div>
+<% end %>
+<div>
+  <%= form_with url: root_path, method: :get, local: true do %>
+    <%= label_tag :query, "Search Posts:" %>
+    <%= text_field_tag :query, params[:query], placeholder: "Enter post title" %>
+    <%= submit_tag "Search" %>
+  <% end %>
+</div>
+
+
+<% @posts.each do |post| %>
+  <div>
+    <h2><%= post.title %></h2>
+    
+    <p><%= post.content %></p>
+    <p><strong>By:</strong> <%= post.user.name %></p>
+
+    <p>
+
+
+    <% if post.image.attached? %>
+  <%= image_tag url_for(post.image), size: "300x300" %>
+<% end %>
+
+
+<% if post.category %>
+        <p class="badge bg-secondary"><%= post.category.name %></p>
+      <% end %>
+
+
+
+  <p id="like-count-<%= post.id %>">Likes: <%= post.likes.count %></p>
+
+<% if logged_in? %>
+  <div id="like-button-<%= post.id %>">
+    <% if post.likes.exists?(user: current_user) %>
+      <%= button_to "Unlike", post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, data: { turbo_method: :delete } %>
+    <% else %>
+      <%= button_to "Like", post_likes_path(post), method: :post, data: { turbo_method: :post } %>
+    <% end %>
+  </div>
+<% end %>
+
+
+
+
+
+
+
+
+    <% if logged_in? && post.user == current_user %>
+      <%= link_to "Edit", edit_post_path(post) %>
+      <%= button_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" } %>
+    <% end %>
+    <!-- Show Comments -->
+    <h3>Comments:</h3>
+    <% post.comments.each do |comment| %>
+      <p><%= comment.content %> - <strong><%= comment.user.name %></strong></p>
+
+      <% if logged_in? && comment.user == current_user %>
+        <%= link_to "Edit", edit_post_comment_path(post, comment) %> |
+        <%= button_to "Delete", post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" } %>
+      <% end %>
+    <% end %>
+
+    <!-- Add New Comment Form -->
+    <% if logged_in? %>
+      <%= form_with model: [post, Comment.new], local: true do |f| %>
+        <div>
+          <%= f.label :content, "Add a comment:" %>
+          <%= f.text_area :content %>
+        </div>
+        <%= f.submit "Comment" %>
+      <% end %>
+    <% end %>
+  </div>
+  <hr>
+
+
+
+
+  
+<% end %>
+
+
+

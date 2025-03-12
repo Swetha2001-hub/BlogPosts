@@ -1,0 +1,11 @@
+<turbo-stream action="replace" target="like-count-<%= @post.id %>">
+  <template>
+    <p id="like-count-<%= @post.id %>">Likes: <%= @post.likes.count %></p>
+  </template>
+</turbo-stream>
+
+<turbo-stream action="replace" target="like-button-<%= @post.id %>">
+  <template>
+    <%= button_to "Like", post_likes_path(@post), method: :post, data: { turbo_method: :post } %>
+  </template>
+</turbo-stream>
